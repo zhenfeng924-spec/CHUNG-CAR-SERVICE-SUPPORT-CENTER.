@@ -1,0 +1,842 @@
+       <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>忠氏汽車服務支援中心</title>
+    <!-- 預加載關鍵資源 -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" as="style">
+    
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 索償程序要小心區塊 */
+        .caution-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .caution-container {
+            position: relative;
+        }
+        .caution-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .caution-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 20px rgba(242, 194, 0, 0.5);
+            letter-spacing: 1px;
+        }
+        .caution-subtitle {
+            font-size: 1.1rem;
+            color: var(--light-text);
+            margin: 0;
+        }
+        .caution-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+        }
+        .caution-card {
+            background: var(--glass-bg);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-glow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+        .caution-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(242, 194, 0, 0.3), rgba(240, 139, 29, 0.3));
+            opacity: 0;
+            filter: blur(12px);
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+        .caution-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 0 30px rgba(242, 194, 0, 0.6), 0 0 60px rgba(242, 194, 0, 0.4), 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-color: rgba(242, 194, 0, 0.6);
+            animation: caution-card-glow 2s ease-in-out infinite;
+        }
+        .caution-card:hover::before {
+            opacity: 1;
+        }
+        @keyframes caution-card-glow {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(242, 194, 0, 0.6), 0 0 60px rgba(242, 194, 0, 0.4), 0 20px 50px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(242, 194, 0, 0.8), 0 0 80px rgba(242, 194, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.5);
+            }
+        }
+        .card-image {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-image-gavel {
+            background: linear-gradient(135deg, #2d1810 0%, #5a3a2a 50%, #3d2415 100%);
+        }
+        .card-image-signing {
+            background: linear-gradient(135deg, #1a3a4a 0%, #2d5a6a 50%, #1f4555 100%);
+        }
+        .card-image-coins {
+            background: linear-gradient(135deg, #f5f5f0 0%, #e8e8dd 50%, #f0f0e5 100%);
+        }
+        .card-icon {
+            font-size: 6rem;
+            color: rgba(242, 194, 0, 0.3);
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 20px rgba(242, 194, 0, 0.4));
+        }
+        .caution-card:hover .card-icon {
+            transform: scale(1.2) rotate(10deg);
+            color: rgba(242, 194, 0, 0.6);
+            filter: drop-shadow(0 0 40px rgba(242, 194, 0, 0.8));
+        }
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(26, 26, 26, 0.7) 100%);
+            pointer-events: none;
+        }
+        .card-content {
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .card-content h3 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(242, 194, 0, 0.4);
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .caution-card:hover .card-content h3 {
+            text-shadow: 0 0 25px rgba(242, 194, 0, 0.7);
+            transform: translateX(5px);
+        }
+        .card-content p {
+            margin: 0;
+            color: var(--light-text);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        @media (max-width: 768px) {
+            .caution-section { padding: 2rem 1.25rem; }
+            .caution-header h2 { font-size: 2rem; }
+            .caution-cards { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem;
+                /* 移除 minmax 限制，讓卡片在小屏幕上更靈活 */
+            }
+            .caution-card {
+                max-width: 100%;
+            }
+            .card-image { height: 220px; }
+            .card-content { padding: 1.5rem; }
+            .card-content h3 { font-size: 1.3rem; }
+            .card-icon { font-size: 4rem; }
+            /* 移動端禁用懸停動畫 */
+            .caution-card:hover {
+                transform: none;
+                animation: none;
+            }
+        }
+        
+        /* 小手機優化 */
+        @media (max-width: 480px) {
+            .caution-section { padding: 1.5rem 1rem; }
+            .caution-header h2 { font-size: 1.75rem; }
+            .caution-subtitle { font-size: 0.95rem; }
+            .card-image { height: 180px; }
+            .card-icon { font-size: 3.5rem; }
+            .card-content { padding: 1.25rem; }
+            .card-content h3 { font-size: 1.15rem; }
+            .card-content p { font-size: 0.9rem; line-height: 1.6; }
+        }
+        
+        /* 交通意外賠償項目區塊 */
+        .compensation-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .compensation-container {
+            position: relative;
+        }
+        .compensation-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .compensation-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            letter-spacing: 1px;
+        }
+        .compensation-subtitle {
+            font-size: 1.1rem;
+            color: var(--light-text);
+            margin: 0;
+        }
+        .compensation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .compensation-card {
+            background: rgba(40, 40, 45, 0.6);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .compensation-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(242, 194, 0, 0.2), rgba(240, 139, 29, 0.2));
+            opacity: 0;
+            filter: blur(10px);
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+        .compensation-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(242, 194, 0, 0.4);
+            box-shadow: 0 0 25px rgba(242, 194, 0, 0.4), 0 0 50px rgba(242, 194, 0, 0.2), 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        .compensation-card:hover::before {
+            opacity: 1;
+        }
+        .compensation-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(242, 194, 0, 0.3);
+        }
+        .compensation-card-header i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            filter: drop-shadow(0 0 10px rgba(242, 194, 0, 0.5));
+        }
+        .compensation-card-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            letter-spacing: 0.5px;
+        }
+        .compensation-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .compensation-list li {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            transition: transform 0.3s ease;
+        }
+        .compensation-list li:hover {
+            transform: translateX(8px);
+        }
+        .compensation-list li > i {
+            font-size: 1.2rem;
+            color: #4ade80;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.5));
+        }
+        .compensation-list li > div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .compensation-list li strong {
+            color: var(--text-color);
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .compensation-list li span {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .compensation-section { padding: 2rem 1.25rem; }
+            .compensation-header h2 { font-size: 2rem; }
+            .compensation-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .compensation-card { padding: 1.5rem; }
+            .compensation-card-header h3 { font-size: 1.2rem; }
+        }
+    </style>
+    <!-- Google Font for futuristic feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 性能優化提示 -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="color-scheme" content="dark">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="./Logo/1767868208839.png" alt="CHUNG CAR - SERVICE SUPPORT CENTER" class="logo-img">
+                <div class="logo-text">
+                    <div class="logo-text-main">忠氏汽車服務支援中心</div>
+                    <div class="logo-text-sub">CHUNG CAR SERVICE SUPPORT CENTER</div>
+                </div>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home">首頁</a></li>
+                <li><a href="#claims">索償流程</a></li>
+                <li><a href="#chat">AI助手對話</a></li>
+                <li><a href="#contact">聯絡方式</a></li>
+            </ul>
+            <div class="nav-user">
+                <a href="tel:+85268887606" class="contact-info">
+                    <div class="contact-text-main">立即咨詢</div>
+                    <div class="contact-text-sub">+852 6888 7606</div>
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 照片輪播區 -->
+    <section class="carousel-section scroll-animate" id="home">
+        <div class="carousel-container">
+            <div class="carousel-slides" id="carouselSlides">
+                <div class="slide active">
+                    <img src="images/屏幕截图 2026-01-08 142444.png" alt="Service hall">
+                    <div class="slide-content">
+                        <h2>忠氏汽車服務支援中心</h2>
+                        <h2>交通意外索償專家</h2>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/屏幕截图 2026-01-08 143146.png" alt="Workshop area">
+                    <div class="slide-content">
+                        <h2>免費交通咨詢</h2>
+                        <h2>義務法律咨詢</h2>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/屏幕截图 2026-01-08 143605.png" alt="Service reception">
+                    <div class="slide-content">
+                        <h2>協助追討</h2>
+                        <h2>應得賠償</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-btn prev" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn next" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="carousel-indicators" id="carouselIndicators">
+                <span class="indicator active" data-slide="0"></span>
+                <span class="indicator" data-slide="1"></span>
+                <span class="indicator" data-slide="2"></span>
+            </div>
+            <div class="carousel-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 交通意外索償流程 -->
+    <section class="claims-section scroll-animate" id="claims">
+        <div class="claims-container">
+            <div class="claims-header">
+                <div class="claims-title">
+                    <i class="fas fa-traffic-light"></i>
+                    <div>
+                        <p class="eyebrow">交通意外</p>
+                        <h2>索償流程</h2>
+                    </div>
+                </div>
+                <p class="claims-subtitle">從報警到審訊的完整節奏，一目了然。</p>
+            </div>
+            <div class="claims-steps">
+                <div class="claim-step scroll-animate">
+                    <div class="step-icon"><span>1</span><i class="fas fa-bullhorn"></i></div>
+                    <div class="step-content">
+                        <h3>報警</h3>
+                        <p>立即報警並保留現場照片、影片與涉事車牌。</p>
+                    </div>
+                </div>
+                <div class="claim-step scroll-animate">
+                    <div class="step-icon"><span>2</span><i class="fas fa-stethoscope"></i></div>
+                    <div class="step-content">
+                        <h3>睇醫生</h3>
+                        <p>到醫院或診所檢查，保存病歷與收據作證明。</p>
+                    </div>
+                </div>
+                <div class="claim-step scroll-animate">
+                    <div class="step-icon"><span>3</span><i class="fas fa-file-signature"></i></div>
+                    <div class="step-content">
+                        <h3>公證報告</h3>
+                        <p>由合資格公證人出具傷情或資產損失報告。</p>
+                    </div>
+                </div>
+                <div class="claim-step scroll-animate">
+                    <div class="step-icon"><span>4</span><i class="fas fa-user-shield"></i></div>
+                    <div class="step-content">
+                        <h3>約警方錄口供</h3>
+                        <p>配合警方提供細節，核對事故經過與證據。</p>
+                    </div>
+                </div>
+                <div class="claim-step scroll-animate">
+                    <div class="step-icon"><span>5</span><i class="fas fa-calendar-alt"></i></div>
+                    <div class="step-content">
+                        <h3>排期上庭</h3>
+                        <p>根據案件進度排期，準備相關文件與證人。</p>
+                    </div>
+                </div>
+                <div class="claim-step scroll-animate">
+                    <div class="step-icon"><span>6</span><i class="fas fa-gavel"></i></div>
+                    <div class="step-content">
+                        <h3>審訊</h3>
+                        <p>於法庭陳述案件，提交證據並等待判決或和解。</p>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </section>
+
+    <!-- 索償程序要小心 -->
+    <section class="caution-section scroll-animate" id="caution">
+        <div class="caution-container">
+            <div class="caution-header">
+                <h2>索償程序要小心</h2>
+                <p class="caution-subtitle">了解這些重要事項，保障您的權益</p>
+            </div>
+            <div class="caution-cards">
+                <div class="caution-card scroll-animate">
+                    <div class="card-image card-image-gavel">
+                        <div class="card-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <div class="card-overlay"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>沒檢控仍可索償</h3>
+                        <p>於調查後如警方決定不起訴對方或法庭最終判對方無罪，受害人仍然可以委託律師行分析案情，向對方保險公司索償，當然程序上會比較複雜，但我們的法律團隊會處理很多成功個案。</p>
+                    </div>
+                </div>
+                
+                <div class="caution-card scroll-animate">
+                    <div class="card-image card-image-signing">
+                        <div class="card-icon">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <div class="card-overlay"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>絕不瓜分賠償</h3>
+                        <p>一般律師費用是向對方保險公司索取，所以受害人絕對會是得到100%賠償的。</p>
+                    </div>
+                </div>
+                
+                <div class="caution-card scroll-animate">
+                    <div class="card-image card-image-coins">
+                        <div class="card-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="card-overlay"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>追討機會</h3>
+                        <p>發生交通意外後，欲減低追討賠償風險，請盡早與我們的法律團隊聯絡。過往有很多個案，皆因受害者沒有適時收集或保存有關之損失的證據，以致賠償金額大幅減少，甚至喪失了追討機會。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 交通意外賠償項目 -->
+    <section class="compensation-section scroll-animate" id="compensation">
+        <div class="compensation-container">
+            <div class="compensation-header">
+                <h2>交通意外賠償項目</h2>
+                <p class="compensation-subtitle">全面了解您可以申請的賠償範圍</p>
+            </div>
+            <div class="compensation-grid">
+                <!-- 一般損害賠償 -->
+                <div class="compensation-card scroll-animate">
+                    <div class="compensation-card-header">
+                        <i class="fas fa-user-injured"></i>
+                        <h3>一般損害賠償</h3>
+                    </div>
+                    <ul class="compensation-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>痛楚及傷苦</strong>
+                                <span>因意外造成的身體及精神傷苦</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>喪失生活樂趣</strong>
+                                <span>因傷勢而無法進行日常活動或愛好</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>毀容賠償</strong>
+                                <span>因意外造成的永久性疤痕或毀容</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 特別損害賠償 -->
+                <div class="compensation-card scroll-animate">
+                    <div class="compensation-card-header">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <h3>特別損害賠償</h3>
+                    </div>
+                    <ul class="compensation-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>醫療費用</strong>
+                                <span>包括已支付和未來可能的醫療費用</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>收入損失</strong>
+                                <span>因意外而無法工作導致的收入損失</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>財物損失</strong>
+                                <span>車輛維修費、個人物品損壞等</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 未來損失 -->
+                <div class="compensation-card scroll-animate">
+                    <div class="compensation-card-header">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>未來損失</h3>
+                    </div>
+                    <ul class="compensation-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>未來收入損失</strong>
+                                <span>因永久傷殘導致的長期收入損失</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>未來醫療費用</strong>
+                                <span>長期治療、復康及護理費用</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>賺取收入能力損失</strong>
+                                <span>在勞動市場的競爭力下降</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 特殊情況賠償 -->
+                <div class="compensation-card scroll-animate">
+                    <div class="compensation-card-header">
+                        <i class="fas fa-heart-broken"></i>
+                        <h3>特殊情況賠償</h3>
+                    </div>
+                    <ul class="compensation-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>死亡賠償</strong>
+                                <span>死者家屬可獲得的賠償</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>撫養費損失</strong>
+                                <span>家庭經濟支柱死亡的賠償</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>喪葬費</strong>
+                                <span>死者的喪葬費用賠償</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI 助手 + 客戶資料區 -->
+    <section class="chat-section scroll-animate" id="chat">
+        <div class="chat-layout">
+
+            <!-- 左側：客戶資料表單 -->
+            <div class="client-info-panel scroll-animate">
+                <div class="client-info-header">
+                    <div class="client-info-icon"><i class="fas fa-user-edit"></i></div>
+                    <div>
+                        <h2>留下您的資料</h2>
+                        <p>我們會盡快與您聯絡</p>
+                    </div>
+                </div>
+                <form class="client-info-form" id="clientInfoForm">
+                    <div class="ci-form-group">
+                        <label for="ci-name">姓名 <span class="ci-required">*</span></label>
+                        <div class="ci-input-wrap">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="ci-name" name="name" placeholder="請輸入您的姓名" required>
+                        </div>
+                    </div>
+                    <div class="ci-form-group">
+                        <label for="ci-phone">聯絡電話 <span class="ci-required">*</span></label>
+                        <div class="ci-phone-row">
+                            <div class="ci-input-wrap ci-area-code">
+                                <i class="fas fa-flag"></i>
+                                <select id="ci-areaCode" name="areaCode">
+                                    <option value="+852">HK +852</option>
+                                    <option value="+86">CN +86</option>
+                                    <option value="+853">MO +853</option>
+                                    <option value="+886">TW +886</option>
+                                </select>
+                            </div>
+                            <div class="ci-input-wrap ci-phone-num">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="ci-phone" name="phone" placeholder="電話號碼" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ci-form-group">
+                        <label for="ci-email">電郵地址</label>
+                        <div class="ci-input-wrap">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="ci-email" name="email" placeholder="選填">
+                        </div>
+                    </div>
+                    <div class="ci-form-group">
+                        <label for="ci-accidentDate">意外發生日期</label>
+                        <div class="ci-input-wrap">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="text" id="ci-accidentDate" name="accidentDate" placeholder="必須三年以內" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'">
+                        </div>
+                    </div>
+                    <div class="ci-form-row">
+                        <div class="ci-form-group">
+                            <label for="ci-workInjury">工作期間受傷</label>
+                            <div class="ci-input-wrap">
+                                <i class="fas fa-hard-hat"></i>
+                                <select id="ci-workInjury" name="workInjury">
+                                    <option value="">請選擇</option>
+                                    <option value="yes">是</option>
+                                    <option value="no">否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ci-form-group">
+                            <label for="ci-sickDays">病假天數</label>
+                            <div class="ci-input-wrap">
+                                <i class="fas fa-bed"></i>
+                                <input type="text" id="ci-sickDays" name="sickDays" placeholder="天數">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ci-form-group">
+                        <label for="ci-hasLawyer">是否已聘用律師 <span class="ci-required">*</span></label>
+                        <div class="ci-input-wrap">
+                            <i class="fas fa-gavel"></i>
+                            <select id="ci-hasLawyer" name="hasLawyer" required>
+                                <option value="">請選擇</option>
+                                <option value="yes">是</option>
+                                <option value="no">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="ci-submit-btn" id="ciSubmitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>提交資料</span>
+                    </button>
+                    <div class="ci-success" id="ciSuccess">
+                        <i class="fas fa-check-circle"></i>
+                        <span>資料已成功提交！我們將盡快聯絡您。</span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 右側：AI 聊天框 -->
+            <div class="chat-container">
+                <div class="messages-container" id="messagesContainer">
+                    <div class="messages-list" id="messagesList">
+                        <div class="message ai-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    <p>您好！我是忠氏汽車服務支援中心的AI助手，專門解答交通意外索償、法律諮詢及賠償相關問題。請問有什麼可以幫助您？</p>
+                                </div>
+                                <div class="message-time">剛剛</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="message ai-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble typing">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            class="message-input" 
+                            placeholder="輸入您的問題... (按 Enter 發送，Shift+Enter 換行)"
+                            rows="1"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button class="action-btn" id="clearBtn" title="清空對話">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button class="action-btn" id="resetBtn" title="重置對話">
+                                <i class="fas fa-rotate-left"></i>
+                            </button>
+                            <button class="send-btn" id="sendBtn" title="發送消息">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer scroll-animate" id="contact">
+        <div class="footer-container">
+
+            <div class="contact-info">
+                <div class="contact-item">
+                    <a class="contact-icon" data-url="tel:+85268887606" title="撥打電話">
+                        <i class="fas fa-phone"></i>
+                    </a>
+                    <span class="contact-text">電話：+852 6888 7606</span>
+                </div>
+                <div class="contact-item">
+                    <a class="contact-icon" data-url="mailto:car59992355@gmail.com" title="發送電郵">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <span class="contact-text">電郵：car59992355@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                    <a class="contact-icon" data-url="https://maps.google.com/?q=%E9%A6%99%E6%B8%AF%E9%87%91%E9%90%98%E9%81%9395%E8%99%9F%E7%B5%B1%E4%B8%80%E4%B8%AD%E5%BF%8326%E6%A8%93B%E5%AE%A4" title="查看地圖">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </a>
+                    <span class="contact-text">地址：香港金鐘道95號統一中心26樓B室</span>
+                </div>
+            </div>
+            <div class="footer-text">
+                <p>&copy; 2026 忠氏汽車服務支援中心. 版權所有.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 錯誤提示彈窗 -->
+    <div class="error-modal" id="errorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> 錯誤</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage">發生錯誤，請稍後再試。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-retry" id="retryBtn">重試</button>
+                <button class="btn-ok" id="okBtn">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
